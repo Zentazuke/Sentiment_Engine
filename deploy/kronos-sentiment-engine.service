@@ -1,0 +1,20 @@
+[Unit]
+Description=Crypto Sentiment Engine - API (uvicorn)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kronos
+WorkingDirectory=/home/kronos/Sentiment_Engine
+# optional env (ONNX model, journal path, etc.) -- the leading - makes it optional
+EnvironmentFile=-/home/kronos/Sentiment_Engine/sentiment.env
+ExecStart=/home/kronos/Sentiment_Engine/.venv/bin/python -m uvicorn sentiment_engine.api:app --host 127.0.0.1 --port 8787
+Restart=always
+RestartSec=5
+# light hardening
+NoNewPrivileges=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

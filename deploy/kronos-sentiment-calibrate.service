@@ -1,0 +1,12 @@
+[Unit]
+Description=Crypto Sentiment Engine - nightly outlook calibration
+After=kronos-sentiment-engine.service
+
+[Service]
+Type=oneshot
+User=kronos
+WorkingDirectory=/home/kronos/Sentiment_Engine
+EnvironmentFile=-/home/kronos/Sentiment_Engine/sentiment.env
+# Reads the live journal directly (no snapshot needed on-box) and rewrites
+# calibration_model.json only if a signal clears the walk-forward adopt gate.
+ExecStart=/home/kronos/Sentiment_Engine/.venv/bin/python -m sentiment_engine.signals.calibrate

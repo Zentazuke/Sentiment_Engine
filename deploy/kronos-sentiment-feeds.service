@@ -1,0 +1,24 @@
+[Unit]
+Description=Crypto Sentiment Engine - live feeds
+After=kronos-sentiment-engine.service network-online.target
+Requires=kronos-sentiment-engine.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kronos
+WorkingDirectory=/home/kronos/Sentiment_Engine
+EnvironmentFile=-/home/kronos/Sentiment_Engine/sentiment.env
+# LIGHT MODE for the shared 4 GB box: no "bluesky" (firehose = heavy bandwidth) and
+# lexicon scoring (no CryptoBERT). These are the cheap, high-value sources.
+# "binance" is required by run_live and is cheap (one websocket) -- keep it.
+# Drop "lsr deriv" only if your VPS region geo-blocks Binance futures (fapi.binance.com).
+ExecStart=/home/kronos/Sentiment_Engine/.venv/bin/python -m sentiment_engine.ingestion.run_live \
+    --sources binance news context lsr deriv \
+    --symbols BTC/USDT ADA/USDT ETH/USDT BNB/USDT SOL/USDT XRP/USDT DOGE/USDT LINK/USDT
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
