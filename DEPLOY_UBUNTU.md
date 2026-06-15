@@ -88,6 +88,30 @@ Fields read `null` until each feed has data — that's expected and the bot trea
 python -m sentiment_engine.ingestion.backfill --sources news --hours 48
 ```
 
+## 8. Always-on dashboard (over Tailscale, like the bot dashboard)
+The engine API stays private on `127.0.0.1:8787`. A tiny stdlib server
+(`serve_dashboard.py`) serves the built React app on **port 8788** and proxies
+`/api` to the engine — no Node needed on the server.
+
+Build the dashboard once on your PC (where npm works), then copy the output up:
+```powershell
+# on your PC
+cd C:\...\sentiment_dashboard_react\sentiment_dashboard_react
+npm run build                                   # produces dist/
+scp -r dist/* kronos@SERVER:~/Sentiment_Engine/dashboard_dist/
+```
+On the server:
+```bash
+mkdir -p ~/Sentiment_Engine/dashboard_dist      # (target for the scp above)
+sudo cp deploy/kronos-sentiment-dashboard.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now kronos-sentiment-dashboard
+systemctl status kronos-sentiment-dashboard --no-pager
+```
+Open `http://<server-tailscale-ip>:8788` from any device on your tailnet — same
+access model as the bot dashboard on 8765. Rebuild + re-scp `dist/*` to update the UI;
+`sudo systemctl restart kronos-sentiment-dashboard` to pick up a new `serve_dashboard.py`.
+
 ---
 
 ## Managing it

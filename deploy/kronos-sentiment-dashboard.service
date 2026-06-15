@@ -1,0 +1,20 @@
+# /etc/systemd/system/kronos-sentiment-dashboard.service
+# Serves the built React dashboard on port 8788 and proxies /api -> the engine
+# (127.0.0.1:8787). Reach it over Tailscale at http://<server-tailscale-ip>:8788,
+# exactly like the bot dashboard on 8765. No Node needed on the server.
+[Unit]
+Description=Crypto Sentiment Engine - dashboard (port 8788)
+After=kronos-sentiment-engine.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kronos
+WorkingDirectory=/home/kronos/Sentiment_Engine
+ExecStart=/home/kronos/Sentiment_Engine/.venv/bin/python serve_dashboard.py
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

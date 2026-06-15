@@ -28,6 +28,10 @@ cryptobert_onnx/
 *_onnx/
 *.onnx
 
+# --- Built dashboard (copied to the server via scp, not committed) ---
+dashboard_dist/
+sentiment.env
+
 # --- Secrets / local env ---
 .env
 *.token
