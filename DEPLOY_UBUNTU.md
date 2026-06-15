@@ -88,29 +88,36 @@ Fields read `null` until each feed has data — that's expected and the bot trea
 python -m sentiment_engine.ingestion.backfill --sources news --hours 48
 ```
 
-## 8. Always-on dashboard (over Tailscale, like the bot dashboard)
-The engine API stays private on `127.0.0.1:8787`. A tiny stdlib server
-(`serve_dashboard.py`) serves the built React app on **port 8788** and proxies
-`/api` to the engine — no Node needed on the server.
+## 8. Always-on dashboard (one repo, over Tailscale, like the bot)
+The dashboard lives in this repo: React source in `dashboard/`, built output in the
+committed `dashboard_dist/`. A tiny stdlib server (`serve_dashboard.py`) serves it on
+**port 8788** and proxies `/api` to the engine. The engine API stays private on
+`127.0.0.1:8787`; no Node is needed on the server.
 
-Build the dashboard once on your PC (where npm works), then copy the output up:
+Build is the only PC-side step (Node lives on your PC). One-time, on your PC:
 ```powershell
-# on your PC
-cd C:\...\sentiment_dashboard_react\sentiment_dashboard_react
-npm run build                                   # produces dist/
-scp -r dist/* kronos@SERVER:~/Sentiment_Engine/dashboard_dist/
+cd C:\Users\Ricardo\Desktop\Work\PROJECTOS\sentiment_engine_independent_v1\dashboard
+npm install
+npm run build            # writes ../dashboard_dist (committed)
+cd ..
+git add -A && git commit -m "Build dashboard" && git push
 ```
-On the server:
+On the server (first time):
 ```bash
-mkdir -p ~/Sentiment_Engine/dashboard_dist      # (target for the scp above)
+cd ~/Sentiment_Engine && git pull
 sudo cp deploy/kronos-sentiment-dashboard.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now kronos-sentiment-dashboard
 systemctl status kronos-sentiment-dashboard --no-pager
 ```
-Open `http://<server-tailscale-ip>:8788` from any device on your tailnet — same
-access model as the bot dashboard on 8765. Rebuild + re-scp `dist/*` to update the UI;
-`sudo systemctl restart kronos-sentiment-dashboard` to pick up a new `serve_dashboard.py`.
+Open `http://<server-tailscale-ip>:8788` from any device on your tailnet — same access
+model as the bot dashboard on 8765.
+
+**To update the UI later** (now identical to the bot — just git):
+```
+# PC:      cd dashboard && npm run build && cd .. && git add -A && git commit -m "..." && git push
+# server:  git pull && sudo systemctl restart kronos-sentiment-dashboard
+```
 
 ---
 

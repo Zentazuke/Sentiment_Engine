@@ -28,8 +28,10 @@ cryptobert_onnx/
 *_onnx/
 *.onnx
 
-# --- Built dashboard (copied to the server via scp, not committed) ---
-dashboard_dist/
+# --- Dashboard: commit the built output so `git pull` ships the UI (like the bot).
+#     Ignore the React build tooling (source lives in dashboard/, node_modules is huge).
+dashboard/node_modules/
+dashboard/dist/
 sentiment.env
 
 # --- Secrets / local env ---

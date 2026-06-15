@@ -10,11 +10,11 @@ Usage:
     python serve_dashboard.py              # default port 8788
     python serve_dashboard.py 9000         # custom port
 
-Build the dashboard once on your PC (where npm works):
-    cd sentiment_dashboard_react/sentiment_dashboard_react
-    npm run build                          # produces dist/
-then copy dist/* into this repo's dashboard_dist/ on the server, e.g.:
-    scp -r dist/* kronos@SERVER:~/Sentiment_Engine/dashboard_dist/
+Build the dashboard on your PC (Node lives there); the source is in this repo:
+    cd dashboard
+    npm run build                          # writes ../dashboard_dist (committed)
+then `git push` from your PC and `git pull` on the server - the built UI ships with
+the repo, exactly like the bot's dashboard.html. No scp, no Node on the server.
 
 Reach it over Tailscale at http://<server-tailscale-ip>:8788 (same as the bot
 dashboard on 8765). The engine API itself stays bound to 127.0.0.1 and is never
