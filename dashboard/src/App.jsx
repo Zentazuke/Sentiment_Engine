@@ -352,7 +352,7 @@ export default function App() {
   function addLog(kind, payload) {
     setLog((items) => [
       {
-        id: crypto.randomUUID(),
+        id: (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`),
         time: new Date().toLocaleTimeString(),
         kind,
         payload
