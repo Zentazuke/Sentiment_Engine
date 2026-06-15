@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- Local data / databases (never commit — large, machine-local) ---
+*.db
+*.db-wal
+*.db-shm
+recovered.db
+sentiment_journal.db
+sentiment_journal_snapshot.db
+reports.txt
+
+# --- Generated model state ---
+calibration_model.json
+
+# --- Transformer / ONNX model artifacts (large) ---
+cryptobert_onnx/
+*_onnx/
+*.onnx
+
+# --- Secrets / local env ---
+.env
+*.token
+*.secret
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

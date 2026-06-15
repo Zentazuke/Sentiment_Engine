@@ -1,0 +1,8 @@
+# Server runtime for the ONNX-int8 sentiment scorer — NO PyTorch.
+# ~300-400 MB resident vs ~1.5-2 GB for the torch transformer.
+# Enable with SENTIMENT_ONNX_MODEL / SENTIMENT_ONNX_TOKENIZER (see
+# convert_cryptobert_onnx.py, which is run off-box and needs torch).
+onnxruntime>=1.17
+tokenizers>=0.15
+# numpy is pulled in by onnxruntime; pinned here only if you need it explicitly:
+# numpy>=1.24

@@ -1,0 +1,5 @@
+# Optional dependencies — only needed for the transformer sentiment scorer.
+# Enable with: set SENTIMENT_TRANSFORMER_MODEL=ElKulako/cryptobert  (or ProsusAI/finbert)
+# The engine runs fine without these (falls back to the built-in lexicon).
+transformers>=4.40
+torch>=2.2
